@@ -1,30 +1,32 @@
 const express=require("express");
-
+const connectDb=require("./config/database");
+const User=require("./models/user");
 const app=express();
 
-// app.use("/",(req,res)=>{
-//     res.send("hello")
-// })
-app.use("/hello",(req,res)=>{
-    res.send("Hello from hello route");
-})
-app.get("/user",(req,res)=>{
-    res.send({"id":req.query.userId,"firstName":"sahith","city":"Hyderabad"});
-})
-app.get("/user/:userId",(req,res)=>{
-    console.log(req.params);
-    res.send({"id":req.params.userId,"firstName":"sahith","city":"Hyderabad"});
-})
-app.post("/user",(req,res)=>{
-     res.send("Data Saved Successfully");
-})
-app.patch("/user",(req,res)=>{
-    res.send("Updated Data Successfully");
-})
-app.delete("/user",(req,res)=>{
-    res.send("Data deleted successfully");
+app.post("/signup",async (req,res)=>{
+    try{
+      const user=new User({
+        firstName:"Sahith",
+        lastName:"Reddy",
+        email:"sahithreddy@gmail.com",
+        password:"Sahith123",
+        age:22,
+        gender:"Male"
+      });
+      await user.save();
+      res.send("User Saved Successfully");
+    } catch(err) {
+        res.status(400).send(err.message);
+    }
 })
 
-app.listen(3000,() => {
-    console.log("Sevrevr running on port 3000")
+
+connectDb() 
+.then(()=>{
+    console.log("Database connected successfully")
+    app.listen(3000,() => {
+        console.log("Sevrevr running on port 3000")
+    })
+}).catch((err)=>{
+    console.log(err);
 })
