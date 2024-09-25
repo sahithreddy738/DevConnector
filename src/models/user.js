@@ -1,5 +1,6 @@
 const mongoose=require("mongoose");
 const validator=require("validator");
+const jwt=require("jsonwebtoken");
 
 const userSchema=new mongoose.Schema({
     firstName:{
@@ -60,6 +61,14 @@ const userSchema=new mongoose.Schema({
         }
     }
 },{timestamps:true});
+
+userSchema.methods.generateToken=function() {
+    const user=this;
+    const token=jwt.sign({ _id: user._id }, process.env.SECREAT_KEY, {
+        expiresIn: "1d",
+      });
+    return token;
+}
 
 const User=mongoose.model("User",userSchema);
 
