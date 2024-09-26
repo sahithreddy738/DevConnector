@@ -28,8 +28,13 @@ const validatePasswordUpdateData=(req) =>{
   if(!validator.isStrongPassword(req.body.newPassword)) throw new Error("Enter new strong password");
   return isPasswordUpdateAllowed;
 }
+const validateStatus=(req) => {
+  const allowedStatus=["interested","ignored"];
+  return allowedStatus.includes(req.params.status);
+}
 module.exports = {
   validateSignUp,
   validateProfileUpdateData,
-  validatePasswordUpdateData
+  validatePasswordUpdateData,
+  validateStatus
 };
