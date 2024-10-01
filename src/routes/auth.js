@@ -7,17 +7,24 @@ const User = require("../models/user");
 authRouter.post("/signup", async (req, res) => {
   try {
     if (!validateSignUp(req))
-      throw new Error("Required only email,firstName,lastName,password");
+      throw new Error("Required email,firstName,lastName,password");
     const { firstName, lastName, email, password } = req.body;
-    const passwordHash = await bcrypt.hash(password, 10);
     const user = new User({
       firstName: firstName,
       lastName: lastName,
       email: email,
-      password: passwordHash,
+      password: password,
     });
-    await user.save();
-    res.send("User Saved Successfully");
+    await user.validate();
+    const passwordHash = await bcrypt.hash(password, 10);
+    user.password=passwordHash;
+    const savedUser=await user.save();
+    const userToken = savedUser.generateToken();
+    res.cookie("token", userToken, {
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    });
+    res.json({message:"User Saved Successfully",newUser:savedUser});
   } catch (err) {
     res.status(400).send(err.message);
   }
@@ -34,7 +41,7 @@ authRouter.post("/login", async (req, res) => {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       httpOnly: true,
     });
-    res.send("Logged In Successfully!!!");
+    res.send(user);
   } catch (err) {
     res.status(400).send("ERROR:" + err.message);
   }
