@@ -5,7 +5,7 @@ const User = require("../models/user");
 const { default: mongoose } = require("mongoose");
 const userRouter = express.Router();
 
-const USER_DATA_TO_SEND = "firstName lastName photoURL skills";
+const USER_DATA_TO_SEND = "firstName lastName photoURL skills age gender about";
 
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
@@ -15,7 +15,7 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
       status: "interested",
     }).populate("fromUserId", USER_DATA_TO_SEND);
     const updatedPendingRequest = pendingRequests.map((pending) => {
-      return { fromUserId: pending.fromUserId, createdAt: pending.createdAt };
+      return { _id:pending._id,fromUserId: pending.fromUserId, createdAt: pending.createdAt };
     });
     res.json({ receivedRequests: updatedPendingRequest });
   } catch (err) {

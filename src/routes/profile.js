@@ -24,14 +24,14 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       loggedInUser._id,
       req.body,
-      { returnDocument: "after" }
+      { returnDocument: "after",runValidators:true }
     );
     res.json({
       user: updatedUser,
       message: `${updatedUser.firstName} profile updated successfully`,
     });
   } catch (err) {
-    res.status(400).send("ERROR!!: " + err.message);
+    res.status(400).json({message:"ERROR!!: " + err.message});
   }
 });
 profileRouter.patch("/profile/password", async (req, res) => {
@@ -39,12 +39,6 @@ profileRouter.patch("/profile/password", async (req, res) => {
     if (!validatePasswordUpdateData(req)) throw new Error("Invalid Fields");
     const user = await User.findOne({ email: req.body.email });
     if (!user) throw new Error("Invalid User");
-    const isPassowrdValid = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    console.log(isPassowrdValid);
-    if (!isPassowrdValid) throw new Error("Invalid Password");
     const newPasswordHash = await bcrypt.hash(req.body.newPassword, 10);
     await User.findByIdAndUpdate(
       user._id,

@@ -23,7 +23,7 @@ const validateProfileUpdateData = (req) => {
   return isUpdateAllowed;
 };
 const validatePasswordUpdateData=(req) =>{
-  const allowedPassowrdUpdateFields=["email","password","newPassword"];
+  const allowedPassowrdUpdateFields=["email","newPassword"];
   const isPasswordUpdateAllowed=Object.keys(req.body).every(key=>allowedPassowrdUpdateFields.includes(key));
   if(!validator.isStrongPassword(req.body.newPassword)) throw new Error("Enter new strong password");
   return isPasswordUpdateAllowed;
