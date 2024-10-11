@@ -4,6 +4,7 @@ const { userAuth } = require("../middlewares/authentication");
 const {
   validateProfileUpdateData,
   validatePasswordUpdateData,
+  fieldsToBeSent,
 } = require("../utils/validation");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
@@ -31,7 +32,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
       message: `${updatedUser.firstName} profile updated successfully`,
     });
   } catch (err) {
-    res.status(400).json({message:"ERROR!!: " + err.message});
+    res.status(400).json({message:err.message});
   }
 });
 profileRouter.patch("/profile/password", async (req, res) => {
@@ -50,5 +51,14 @@ profileRouter.patch("/profile/password", async (req, res) => {
     res.status(400).send("ERROR!!: " + err.message);
   }
 });
-
+profileRouter.get("/profile/:userId",userAuth,async (req,res)=>{
+  try{
+   const userToSentId=req.params.userId;
+   const userToSent=await User.findById(userToSentId).select(fieldsToBeSent);
+   if(!userToSent) throw new Error("User Not Found").status(404);
+   res.json({user:userToSent});
+  }catch (err) {
+    res.status(400).send("ERROR!!: " + err.message);
+  }
+})
 module.exports = profileRouter;

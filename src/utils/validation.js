@@ -32,9 +32,11 @@ const validateStatus=(req) => {
   const allowedStatus=["interested","ignored"];
   return allowedStatus.includes(req.params.status);
 }
+const fieldsToBeSent="firstName lastName age about photoURL gender skills email";
 module.exports = {
   validateSignUp,
   validateProfileUpdateData,
   validatePasswordUpdateData,
-  validateStatus
+  validateStatus,
+  fieldsToBeSent
 };

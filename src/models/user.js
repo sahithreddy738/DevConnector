@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minLength: 4,
       maxLength: 20,
+      message:"Provide name between 4 and 20 length"
     },
     lastName: {
       type: String,
@@ -18,6 +19,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       minLength: 4,
       maxLength: 20,
+       message:"Provide name between 4 and 20 length"
     },
     email: {
       type: String,
@@ -45,21 +47,26 @@ const userSchema = new mongoose.Schema(
     age: {
       type: Number,
       min: 18,
+      trim:true,
+      message:"Age should above 18"
     },
     gender: {
       type: String,
       enum: ["Male", "Female", "Others","male","female"],
+      trim:true,
+      message:"Provide Gender Correctly"
     },
     about: {
       type: String,
       default: "This is about the user",
-      maxLength: 150,
+      maxLength: 250,
+      message:"About:Max 250 Length Allowed"
     },
     photoURL: {
       type: String,
       validate: {
         validator: (value) => validator.isURL(value),
-        message: "Provide a valid URL",
+        message: "Provide a valid photo format",
       },
       default:
         "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg",
