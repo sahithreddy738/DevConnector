@@ -44,7 +44,7 @@ profileRouter.patch("/profile/password", async (req, res) => {
     await User.findByIdAndUpdate(
       user._id,
       { password: newPasswordHash },
-      { returnDocument: "after" }
+      { returnDocument: "after",runValidators:true }
     );
     res.json({ message: "Updated Password Successfully" });
   } catch (err) {

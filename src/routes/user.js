@@ -41,7 +41,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
     });
     res.json({ userConnections });
   } catch (err) {
-    res.status(400).sen("ERROR!! " + err.message);
+    res.status(400).send("ERROR!! " + err.message);
   }
 });
 userRouter.get("/user/feed", userAuth, async (req, res) => {
